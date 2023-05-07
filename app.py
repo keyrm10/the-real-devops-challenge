@@ -1,6 +1,7 @@
 from os import environ
 
 from bson import json_util
+from bson.errors import InvalidId
 from bson.objectid import ObjectId
 from flask import Flask, jsonify
 from flask_pymongo import PyMongo
@@ -22,8 +23,14 @@ def restaurants():
 
 @app.route("/api/v1/restaurant/<id>")
 def restaurant(id):
-    restaurants = find_restaurants(mongo, id)
-    return jsonify(restaurants)
+    try:
+        restaurant = find_restaurants(mongo, id)
+        if restaurant:
+            return jsonify(restaurant)
+        else:
+            return "", 204
+    except (InvalidId, TypeError):
+        return "", 204
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=False, port=8080)
