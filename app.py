@@ -9,28 +9,28 @@ from flask_pymongo import PyMongo
 from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = environ.get("MONGO_URI")
+app.config['MONGO_URI'] = environ.get('MONGO_URI')
 app.json_encoder = MongoJSONEncoder
-app.url_map.converters["objectid"] = ObjectIdConverter
+app.url_map.converters['objectid'] = ObjectIdConverter
 mongo = PyMongo(app)
 
 
-@app.route("/api/v1/restaurant")
+@app.route('/api/v1/restaurant')
 def restaurants():
     restaurants = find_restaurants(mongo)
     return jsonify(restaurants)
 
 
-@app.route("/api/v1/restaurant/<id>")
+@app.route('/api/v1/restaurant/<id>')
 def restaurant(id):
     try:
         restaurant = find_restaurants(mongo, id)
         if restaurant:
             return jsonify(restaurant)
         else:
-            return "", 204
+            return '', 204
     except (InvalidId, TypeError):
-        return "", 204
+        return '', 204
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False, port=8080)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=False, port=8080)
