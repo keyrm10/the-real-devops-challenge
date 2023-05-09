@@ -46,3 +46,13 @@ app          v1        5a23eb32f952   5 hours ago     930MB
 [Dockerfile-mongo](./Dockerfile-mongo) serves to create a MongoDB Docker image. It copies the dataset file [restaurant.json](./data/restaurant.json) and a script file [import-data.sh](./data/import-data.sh) into the container, and then switches to a non-root user and group (mongodb) to ensure better security and avoid potential security vulnerabilities.
 
 The official [mongo](https://hub.docker.com/_/mongo) container image provides the `/docker-entrypoint-initdb.d` path. When the container is launched for the first time, any files with the `.sh` or `.js` extension in this directory are executed. Therefore, by placing our [import-data.sh](./data/import-data.sh) script in this directory, we can ensure that our dataset is imported at initialization time.
+
+### Challenge 5. Docker Compose it
+
+> Once you've got dockerized all the API components *(python app and database)*, you are ready to make a docker-compose file.
+> **KISS**.
+
+The [docker-compose.yml](./docker-compose.yml) file is written in version 3.9 and defines two services:
+
+- `mongo`: Built using the [Dockerfile-mongo](./Dockerfile-mongo) file. It maps the `./data` directory to the `/data/db` directory within the container using volumes. It exposes the port 27017i (MongoDB default port).
+- `app`: Built using the [Dockerfile-app](./Dockerfile-app) file. It sets the `MONGO_URI` environment variable, enabling `app` to connect to the `mongo` database. Additionally, it exposes the port 8080, and the `depends_on` parameter is set to `mongo`, indicating that the `app` service depends on the `mongo` service.
