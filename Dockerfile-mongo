@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1
+
+# Base image
+FROM mongo:6.0.5-jammy
+
+# Copy dataset file
+COPY data/restaurant.json /restaurant.json
+
+# Copy script to import data
+COPY data/import-data.sh /docker-entrypoint-initdb.d/import-data.sh
+
+# Switch to non-root user and group
+USER mongodb:mongodb
