@@ -33,5 +33,9 @@ COPY --from=build /app .
 # Expose port
 EXPOSE 8080
 
-# Run app
+# Create non-root user
+RUN adduser -u 10001 -D nonroot
+
+# Run app as non-root user
+USER nonroot
 CMD [ "python", "app.py" ]
