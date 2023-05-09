@@ -7,11 +7,11 @@
 > 
 > We want to fix the second endpoint. Return a json object instead of a json array if there is a match or a http 204 status code if no match found.
 
-To fix the second endpoint, we need to modify the `find_restaurants` function in [mongoflask.py](./src/mongoflask.py) so that it returns a single restaurant object instead of a JSON array when given an `_id` parameter.
+To fix the second endpoint, the `find_restaurants` function in [mongoflask.py](./src/mongoflask.py) needs to be modified to return a single restaurant object instead of a JSON array when provided with an `_id` parameter.
 
-After that, we can modify the `restaurant` function in [app.py](./app.py) to check if a restaurant object was returned from `find_restaurants`. If a restaurant object is found, we can return it as a JSON response using Flask's `jsonify` function. If no restaurant object is found, we can return a 204 status code (No Content) to indicate that the request was successful, but there is no data to return.
+After this modification, the `restaurant` function in [app.py](./app.py) can be updated to verify if a restaurant object is returned from `find_restaurants`. If a restaurant object is found, it is returned as a JSON response using Flask's `jsonify` function. If no restaurant object is found, a 204 status code (No Content) is returned to indicate that the request was successful, but no data is available.
 
-To handle the edge case where an invalid `ObjectId` is passed to the `/api/v1/restaurant/{id}` endpoint, we can modify the `restaurant` function to catch the `InvalidId` exception raised by the `ObjectId` constructor. If an `InvalidId` exception is caught, we can return a 204 No Content status code to indicate that the request was successful, but the provided ID is invalid and no data can be returned.
+To handle the edge case where an invalid `ObjectId` is passed to the `/api/v1/restaurant/{id}` endpoint, the `restaurant` function is amended to catch the `InvalidId` exception raised by the `ObjectId` constructor. If an `InvalidId` exception is caught, it returns a 204 status code (No Content) to indicate that the request was successful, but the provided ID is invalid and no data can be retrieved.
 
 ### Challenge 2. Test the application in any cicd system
 
