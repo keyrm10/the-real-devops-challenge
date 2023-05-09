@@ -37,3 +37,12 @@ app          v2        361cd22a8d14   7 minutes ago   69.7MB
 app          v1        5a23eb32f952   5 hours ago     930MB
 ```
 
+### Challenge 4. Dockerize the database
+
+> We need to have a mongodb database to make this application run. So, we need a mongodb container with some data. Please, use the [restaurant](./data/restaurant.json) dataset to load the mongodb collection before running the application.
+> 
+> The loaded mongodb collection must be named: `restaurant`. Do you have to write code or just write a Docker file?
+
+[Dockerfile-mongo](./Dockerfile-mongo) serves to create a MongoDB Docker image. It copies the dataset file [restaurant.json](./data/restaurant.json) and a script file [import-data.sh](./data/import-data.sh) into the container, and then switches to a non-root user and group (mongodb) to ensure better security and avoid potential security vulnerabilities.
+
+The official [mongo](https://hub.docker.com/_/mongo) container image provides the `/docker-entrypoint-initdb.d` path. When the container is launched for the first time, any files with the `.sh` or `.js` extension in this directory are executed. Therefore, by placing our [import-data.sh](./data/import-data.sh) script in this directory, we can ensure that our dataset is imported at initialization time.
