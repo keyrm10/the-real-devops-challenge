@@ -19,3 +19,21 @@ To handle the edge case where an invalid `ObjectId` is passed to the `/api/v1/re
 > Choose one, travis-ci, gitlab-ci, circleci... whatever you want. Give us a successful pipeline.
 
 The GitHub Actions workflow builds and tests our Python application on Ubuntu with Python 3.9, 3.10, and 3.11. It runs on a push event to the master branch when any ".py" file is modified. The job checks out the code, sets up Python, installs dependencies, lints with ruff, and tests with tox.
+
+### Challenge 3. Dockerize the APP
+
+> What about containers? As this moment *(2018)*, containers are a standard in order to deploy applications *(cloud or in on-premise systems)*. So the challenge is to build the smaller image you can. Write a good Dockerfile :)
+
+The `Dockerfile-app` containerizes our Python application, using a multi-stage build process to create a smaller and more secure image.
+
+During the first stage, dependencies are installed and binary wheel files are created for them. The second stage installs these dependencies from the binary wheel files, copies the source files, exposes port 8080, and sets the command to run the app. In order to improve the image security, the app runs using a non-root user.
+
+As a result of this optimization, the image size has been reduced by 92.5%, compared to a single-stage build:
+
+```shell
+$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+app          v2        361cd22a8d14   7 minutes ago   69.7MB
+app          v1        5a23eb32f952   5 hours ago     930MB
+```
+
