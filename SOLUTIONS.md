@@ -55,4 +55,22 @@ The official [mongo](https://hub.docker.com/_/mongo) container image provides th
 The [docker-compose.yml](./docker-compose.yml) file is written in version 3.9 and defines two services:
 
 - `mongo`: Built using the [Dockerfile-mongo](./Dockerfile-mongo) file. It maps the `./data` directory to the `/data/db` directory within the container using volumes. It exposes the port 27017i (MongoDB default port).
+
 - `app`: Built using the [Dockerfile-app](./Dockerfile-app) file. It sets the `MONGO_URI` environment variable, enabling `app` to connect to the `mongo` database. Additionally, it exposes the port 8080, and the `depends_on` parameter is set to `mongo`, indicating that the `app` service depends on the `mongo` service.
+
+### Final Challenge. Deploy it on kubernetes
+
+> If you are a container hero, an excellent devops... We want to see your expertise. Use a kubernetes system to deploy the `API`. We recommend you to use tools like [minikube](https://kubernetes.io/docs/setup/minikube/) or [microk8s](https://microk8s.io/).
+> Write the deployment file *(yaml file)* used to deploy your `API` *(python app and mongodb)*.
+
+These files are shell scripts and Kubernetes manifests files that can be used to create a local Kubernetes cluster using `kind`, as well as deploy the Python app and MongoDB instance:
+
+- [init.sh](./k8s/init.sh): This script checks if `kind` is installed and installs it if it isn't. It then creates a local Kubernetes cluster using the [kind-config.yml](./k8s/kind-config.yml) file, retrieves the kubeconfig, and applies the Kubernetes manifests found in the [manifests/](./k8s/manifests/) directory. The Kubernetes manifests define a deployment, service, and ingress for the app, and a deployment and service for the MongoDB instance.
+- [clean.sh](./k8s/clean.sh): This script checks if a kind cluster and kind binary exist, and deletes them if they do. It is intended for cleaning your environment after running [init.sh](./k8s/init.sh).
+
+> Note that after applying the manifests, it may take some time for the Ingress to fully deploy and become functional. You can check the status of the Ingress by running the command `kubectl get ingress app`.
+
+You can access the API using the following paths:
+
+- `curl localhost/api/v1/restaurant` to retrieve a list containing all the restaurants.
+- `curl localhost/api/v1/restaurant/{id}` to retrieve a specific restaurant that matches its `id`.
